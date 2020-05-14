@@ -1,11 +1,12 @@
 require_relative "RuneScapeItem.rb"
+require_relative "Portfolio.rb"
+require_relative "Transaction.rb"
+
+glaiven_boots = RuneScapeItem.new(21790)
 
 myport = Portfolio.new
-myport.add_item(21787)
-myport.add_item(21790)
-
-steadfast_boots = myport.items["Steadfast boots"]
-glaiven_boots = myport.items["Glaiven boots"]
+steadfast_boots= myport.add_item_by_id(21787)
+myport.add_item(glaiven_boots)
 
 myport.add_transaction(steadfast_boots, 3, 4000000, false)
 myport.add_transaction(steadfast_boots, 7, 5000000, false)
