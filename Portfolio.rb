@@ -3,11 +3,13 @@ require_relative "Transaction.rb"
 
 class Portfolio
 
-    attr_accessor :items, :transactions 
+    attr_reader :items, :transactions, :spending, :revenue
 
     def initialize
         @items = {}
         @transactions = []
+        @spending = 0
+        @revenue = 0
     end
     
     def add_item(item)
@@ -25,8 +27,18 @@ class Portfolio
     end
 
     def add_transaction(item, quantity, price, sell)
+        @items[item.name] = item
+
         transaction = Transaction.new(item, quantity, price, sell)
         @transactions << transaction
+
+        if sell 
+            @revenue += price 
+        else
+            @spending += price
+        end
+
+        return transaction
     end
 
     def item_performance(name)
@@ -55,6 +67,18 @@ class Portfolio
     end
 
     def portfolio_performance
+        puts "Portfolio Performance"
+        puts "Total spending: #{spending}"
+        puts "Total sales: #{revenue}"
+        puts "Return: #{(100*(revenue.to_f-spending.to_f)/spending.to_f).round(2)}%"
+
+        puts
+        puts "Performance by Item:"
+
+        @items.each do |key, value|
+            puts
+            self.item_performance(value.name)
+        end
     end
 
 end

@@ -5,9 +5,9 @@ require "date"
 
 class RuneScapeItem
 
-    attr_accessor :id
-    attr_accessor :item, :icon, :icon_large, :type, :typeIcon, :name, :description, :members, :current, :today, :day30, :day90, :day180
-    attr_accessor :daily_chart, :average_chart
+    attr_reader :id
+    attr_reader :item, :icon, :icon_large, :type, :typeIcon, :name, :description, :members, :current, :today, :day30, :day90, :day180
+    attr_reader :daily_chart, :average_chart
 
     def initialize(id)
         @id = id
