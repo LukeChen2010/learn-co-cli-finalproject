@@ -1,8 +1,3 @@
-require "open-uri"
-require "net/http"
-require "json"
-require "date"
-
 class RuneScapeItem
 
     attr_reader :id
@@ -19,9 +14,7 @@ class RuneScapeItem
 
     def get_item_details
         url = "http://services.runescape.com/m=itemdb_rs/api/catalogue/detail.json?item=#{@id}"
-        uri = URI.parse(url)
-        response = Net::HTTP.get_response(uri)
-        payload = JSON.parse(response.body)
+        payload = API_Bootstrap.get_payload(url)
 
         @item = payload["item"]
         @icon = @item["icon"]
@@ -40,9 +33,7 @@ class RuneScapeItem
 
     def get_price_chart
         url = "http://services.runescape.com/m=itemdb_rs/api/graph/#{@id}.json"
-        uri = URI.parse(url)
-        response = Net::HTTP.get_response(uri)
-        payload = JSON.parse(response.body)
+        payload = API_Bootstrap.get_payload(url)
 
         daily_hash = payload["daily"]
         average_hash = payload["average"]

@@ -1,5 +1,3 @@
-require_relative "RuneScapeItem.rb"
-
 class Transaction
 
     attr_reader :item, :quantity, :price, :sell, :value

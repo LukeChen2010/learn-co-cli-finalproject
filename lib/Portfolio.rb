@@ -1,6 +1,3 @@
-require_relative "RuneScapeItem.rb"
-require_relative "Transaction.rb"
-
 class Portfolio
 
     attr_reader :items, :transactions, :spending, :revenue
@@ -72,6 +69,8 @@ class Portfolio
         puts "Total sales: #{revenue}"
         puts "Return: #{(100*(revenue.to_f-spending.to_f)/spending.to_f).round(2)}%"
 
+        return if @transactions.count == 0
+        
         puts
         puts "Performance by Item:"
 
