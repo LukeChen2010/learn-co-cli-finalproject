@@ -38,46 +38,72 @@ class Portfolio
         return transaction
     end
 
-    def item_performance(name)
+    def item_quantity_bought(name)
         quantity_bought = 0
-        quantity_sold = 0 
-        price_bought = 0
-        price_sold = 0
 
         item_buys = @transactions.find_all {|x| x.item.name == name && x.sell == false}
-        item_sales = @transactions.find_all {|x| x.item.name == name && x.sell == true}
 
         item_buys.each do |x|
             quantity_bought += x.quantity
+        end
+
+        return quantity_bought
+    end
+
+    def item_price_bought_total(name)
+        price_bought = 0
+
+        item_buys = @transactions.find_all {|x| x.item.name == name && x.sell == false}
+
+        item_buys.each do |x|
             price_bought += x.price
         end
 
+        return price_bought
+    end
+
+    def item_price_bought_average(name)
+        return 0 if item_quantity_bought(name) == 0
+        return (item_price_bought_total(name).to_f/item_quantity_bought(name).to_f).floor
+    end
+
+    def item_quantity_sold(name)
+        quantity_sold = 0 
+
+        item_sales = @transactions.find_all {|x| x.item.name == name && x.sell == true}
+
         item_sales.each do |x|
             quantity_sold += x.quantity
+        end
+
+        return quantity_sold
+    end
+
+    def item_price_sold_total(name)
+        price_sold = 0 
+
+        item_sales = @transactions.find_all {|x| x.item.name == name && x.sell == true}
+
+        item_sales.each do |x|
             price_sold += x.price
         end
 
-        puts "#{items[name].name}:"
-        puts "Bought: #{quantity_bought} for #{price_bought} (~#{(price_bought.to_f/quantity_bought.to_f).floor} each)"
-        puts "Sold: #{quantity_sold} for #{price_sold} (~#{(price_sold.to_f/quantity_sold.to_f).floor} each)"
-        puts "Return: #{(100*(price_sold.to_f-price_bought.to_f)/price_bought.to_f).round(2)}%"
+        return price_sold
     end
 
-    def portfolio_performance
-        puts "Portfolio Performance"
-        puts "Total spending: #{spending}"
-        puts "Total sales: #{revenue}"
-        puts "Return: #{(100*(revenue.to_f-spending.to_f)/spending.to_f).round(2)}%"
+    def item_price_sold_average(name)
+        return 0 if item_quantity_sold(name) == 0
+        return (item_price_sold_total(name).to_f/item_quantity_sold(name).to_f).floor
+    end
 
-        return if @transactions.count == 0
-        
-        puts
-        puts "Performance by Item:"
+    def item_return(name)
+        return 0 if item_quantity_bought(name) == 0
+        return 100*(item_price_sold_total(name) - item_price_bought_total(name)).to_f/item_price_bought_total(name).to_f
+    end
 
-        @items.each do |key, value|
-            puts
-            self.item_performance(value.name)
-        end
+    def portfolio_return
+        return nil if @transactions.count == 0
+        return 100*(revenue - spending).to_f/spending.to_f
     end
 
 end

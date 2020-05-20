@@ -9,4 +9,3 @@ require "./lib/Portfolio.rb"
 require "./lib/RuneScapeItem.rb"
 require "./lib/Transaction.rb"
 
-GEBuddy.new.call

@@ -10,7 +10,7 @@ class GEBuddy
             puts "2. Get price history"
             puts "3. Add item to portfolio"
             puts "4. Add transaction"
-            puts "5. View performance"
+            puts "5. View portfolio performance"
             puts "6. Exit"
             print "Select menu options: "
             input = gets.to_i
@@ -26,9 +26,8 @@ class GEBuddy
             when 4
                 add_transaction
             when 5
-                view_performance
+                view_portfolio_performance
             end
-
         end
     end
 
@@ -60,8 +59,11 @@ class GEBuddy
             return if input == 0
         end
 
-        puts item_keys[input - 1]
-        @portfolio.items[item_keys[input - 1]].print_daily_chart
+        puts "Price history of #{item_keys[input - 1]}:"
+        
+        @portfolio.items[item_keys[input - 1]].daily_chart.each do |key, value|
+            puts "#{key}: #{value}"
+        end
     end
 
     def add_item_to_portfolio
@@ -119,10 +121,23 @@ class GEBuddy
         puts
     end
 
-    def view_performance
-        @portfolio.portfolio_performance
-    end
+    def view_portfolio_performance
+        puts "Portfolio performance"
+        puts "Total spending: #{@portfolio.spending}"
+        puts "Total sales: #{@portfolio.revenue}"
+        puts "Return: #{@portfolio.portfolio_return.round(2)}%"
 
+        puts "Individual item performance:"
+        puts
+        @portfolio.items.each do |key, value|
+            name = value.name
+            puts "#{name}:"
+            puts "Bought: #{@portfolio.item_quantity_bought(name)} for #{@portfolio.item_price_bought_total(name)} (~#{@portfolio.item_price_bought_average(name)} each)"
+            puts "Sold: #{@portfolio.item_quantity_sold(name)} for #{@portfolio.item_price_sold_total(name)} (~#{@portfolio.item_price_sold_average(name)} each)"
+            puts "Return: #{@portfolio.item_return(name).round(2)}%"
+            puts
+        end
+    end
 end
 
 

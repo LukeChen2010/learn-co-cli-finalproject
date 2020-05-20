@@ -50,17 +50,4 @@ class RuneScapeItem
             @average_chart[date.strftime("%m/%d/%Y")] = value
        end
     end
-
-    def print_daily_chart
-        daily_chart.each do |key, value|
-            puts "#{key}: #{value}"
-        end
-    end
-
-    def print_average_chart
-        average_chart.each do |key, value|
-            puts "#{key}: #{value}"
-        end
-    end
-
 end
