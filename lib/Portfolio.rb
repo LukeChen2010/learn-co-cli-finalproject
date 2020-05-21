@@ -4,7 +4,7 @@ class Portfolio
 
     def initialize
         @items = {}
-        @transactions = []
+        @transactions = Transaction.all
         @spending = 0
         @revenue = 0
     end
@@ -26,8 +26,7 @@ class Portfolio
     def add_transaction(item, quantity, price, sell)
         @items[item.name] = item
 
-        transaction = Transaction.new(item, quantity, price, sell)
-        @transactions << transaction
+        transaction = Transaction.new(item, quantity, price, sell, self)
 
         if sell 
             @revenue += price 
@@ -38,10 +37,22 @@ class Portfolio
         return transaction
     end
 
+    def portfolio_transactions
+        return @transactions.find_all {|x| x.portfolio == self}
+    end
+
+    def portfolio_sell_transactions
+        return portfolio_transactions.find_all {|x| x.sell == true}
+    end
+
+    def portfolio_buy_transactions
+        return portfolio_transactions.find_all {|x| x.sell == false}
+    end
+
     def item_quantity_bought(name)
         quantity_bought = 0
 
-        item_buys = @transactions.find_all {|x| x.item.name == name && x.sell == false}
+        item_buys = portfolio_buy_transactions.find_all {|x| x.item.name == name}
 
         item_buys.each do |x|
             quantity_bought += x.quantity
@@ -53,7 +64,7 @@ class Portfolio
     def item_price_bought_total(name)
         price_bought = 0
 
-        item_buys = @transactions.find_all {|x| x.item.name == name && x.sell == false}
+        item_buys = portfolio_buy_transactions.find_all {|x| x.item.name == name}
 
         item_buys.each do |x|
             price_bought += x.price
@@ -70,7 +81,7 @@ class Portfolio
     def item_quantity_sold(name)
         quantity_sold = 0 
 
-        item_sales = @transactions.find_all {|x| x.item.name == name && x.sell == true}
+        item_sales = portfolio_sell_transactions.find_all {|x| x.item.name == name}
 
         item_sales.each do |x|
             quantity_sold += x.quantity
@@ -82,7 +93,7 @@ class Portfolio
     def item_price_sold_total(name)
         price_sold = 0 
 
-        item_sales = @transactions.find_all {|x| x.item.name == name && x.sell == true}
+        item_sales = portfolio_sell_transactions.find_all {|x| x.item.name == name}
 
         item_sales.each do |x|
             price_sold += x.price
